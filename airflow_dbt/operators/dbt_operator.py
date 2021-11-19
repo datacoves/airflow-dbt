@@ -177,9 +177,21 @@ class DbtCleanOperator(DbtBaseOperator):
 class DbtBuildOperator(DbtBaseOperator):
     @apply_defaults
     def __init__(self, profiles_dir=None, target=None, *args, **kwargs):
-        super(DbtBuildOperator, self).__init__(
+        super().__init__(
             profiles_dir=profiles_dir, target=target, *args, **kwargs
         )
 
     def execute(self, context):
+        self.create_hook().run_cli("build")
+
+
+class DbtDepsAndBuildOperator(DbtBaseOperator):
+    @apply_defaults
+    def __init__(self, profiles_dir=None, target=None, *args, **kwargs):
+        super().__init__(
+            profiles_dir=profiles_dir, target=target, *args, **kwargs
+        )
+
+    def execute(self, context):
+        self.create_hook().run_cli("deps")
         self.create_hook().run_cli("build")
